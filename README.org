@@ -4,7 +4,7 @@
 
   This library is simple as hell. You should like it. :)
   
-* Running
+* An example
   To figure out what does this program do just try an example. Type:
 #+BEGIN_SRC sh
 ant
