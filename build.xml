@@ -1,0 +1,120 @@
+<project name="d-key-menu" basedir="." default="main">
+
+  <property name="p.src" value="src"/>
+  <property name="p.build" value="bin"/>
+  <property name="p.classes" value="${p.build}/classes"/>
+  <property name="p.jar" value="${p.build}/jar"/>
+  <property name="p.lib" value="lib"/>
+  <property name="p.native" value="native"/>
+
+  <property name="url.lwjgl" value="http://downloads.sourceforge.net/project/java-game-lib/Official%20Releases/LWJGL%202.7.1/lwjgl-2.7.1.zip"/>
+
+  <property name="p.main-class" value="com.m039.dkeymenu.DKeyMenuExample"/>
+
+  <!-- Platform check -->
+  
+  <condition property="p.platform" value="linux">
+    <os family="unix" />
+  </condition>
+
+  <condition property="p.platform" value="windows">
+    <os family="windows" />
+  </condition>
+
+  <condition property="p.platform" value="macosx">
+    <os family="mac" />
+  </condition>
+
+  <path id="path.classpath">
+    <fileset dir="${p.lib}" includes="**/*.jar"/>
+  </path>
+
+  <path id="path.application">
+    <pathelement location="${p.jar}/${ant.project.name}.jar"/>
+  </path>
+
+  <!-- Targets -->
+  
+  <target name="main" depends="clean,run"/>
+
+  <target name="deps"
+          description="Downloads external libraries and install them into ./native and ./lib folders.">
+    <mkdir dir="${p.lib}"/>
+    <mkdir dir="${p.native}"/>
+    <get src="${url.lwjgl}" dest="${p.lib}/lwjgl.zip" usetimestamp="true" />
+
+    <unzip src="${p.lib}/lwjgl.zip" dest="${p.lib}">
+      <patternset>
+        <include name="**/jar/*.jar"/>
+      </patternset>
+      <mapper type="flatten"/>
+    </unzip>
+
+    <unzip src="${p.lib}/lwjgl.zip" dest="${p.native}">
+      <patternset>
+        <include name="**/native/${p.platform}/*"/>
+      </patternset>
+      <mapper type="flatten"/>
+    </unzip>    
+  </target>
+
+  <target name="compile">
+    <mkdir dir="${p.classes}"/>
+    <mkdir dir="${p.lib}"/>    
+
+    <javac srcdir="src"
+           debug="yes"
+           destdir="${p.classes}"
+           includeantruntime="false"
+           classpathref="path.classpath"/>
+  </target>
+
+  <target name="run" depends="deps,compile,jar"
+	  description="Use this target to run the application. All the environment will be set accordingly.">
+    <java classname="${p.main-class}" fork="true">
+      <sysproperty key="java.library.path" path="${p.native}"/>
+      
+      <classpath>
+        <path refid="path.classpath"/>
+        <path refid="path.application"/>
+      </classpath>
+    </java>
+  </target>
+  
+  <target name="jar" depends="compile">
+    <mkdir dir="${p.jar}"/>
+    <jar destfile="${p.jar}/${ant.project.name}.jar" basedir="${p.classes}">
+      <manifest>
+        <attribute name="Main-Class" value="${p.main-class}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="debug" depends="compile">
+    <java classname="${p.main-class}" fork="true">
+      <jvmarg value="-Xdebug" />
+      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=6001" />
+
+      <classpath>
+        <path refid="path.classpath"/>
+        <path refid="path.application"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="clean">
+    <delete dir="${p.build}"/>
+    <delete dir="${p.lib}"/>
+    <delete dir="${p.native}"/>
+  </target>  
+  
+  <target name="tags">
+    <exec executable="/bin/sh">
+      <arg value="-c"/>
+      <arg value="jtags ./"/>
+    </exec>
+  </target>
+  
+  <target name="clean-build" depends="clean,jar"/>
+
+</project>
