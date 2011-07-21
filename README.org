@@ -2,7 +2,7 @@
   This library adds a debugging menu (or menu of menus) to your game
   project. It helps to interactivly debug the game.
 
-  This is library is simple as hell. You should like it. :)
+  This library is simple as hell. You should like it. :)
   
 * Running
   To figure out what does this program do just try an example. Type:
