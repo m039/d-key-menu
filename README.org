@@ -1,0 +1,30 @@
+* About
+  This library adds a debugging menu (or menu of menus) to your game
+  project. It helps to interactivly debug the game.
+
+  This is library is simple as hell. You should like it. :)
+  
+* Running
+  To figure out what does this program do just try an example. Type:
+#+BEGIN_SRC sh
+ant
+#+END_SRC
+  in the console and you see the black screen window. If you type 'h'
+  you'll see the formated help message. Type a button to enter to
+  appropriate menu. Type again to exit the menu. That is all!
+
+  An example session:
+  'h'
+  'a'
+  '1'
+  '2'
+  'a'
+  'b'
+  '1'
+  '2'
+  'b'
+  'q'
+  
+* License
+d-key-menu is licensed under the terms of the Apache 2.0 license as
+listed in the LICENSE file.
